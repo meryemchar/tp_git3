@@ -1,28 +1,40 @@
-.shared_windows_runners:
-  tags:
-    - shared-windows
-    - windows
-    - windows-1809
+before_script:
+  - apt-get update
+  - apt-get -y install ant
+  - git clone https://git-wip-us.apache.org/repos/asf/ant-ivy.git
+  - cd ant-ivy
+  - ant jar
+  - cp ./build/artifact/jars/ivy.jar /usr/share/ant/lib/
+  - cd ../
 
-stages:
+stages:        # List of stages for jobs, and their order of execution
+  - .pre
   - build
   - test
+  - run
 
-before_script:
- - Set-Variable -Name "time" -Value (date -Format "%H:%m")
- - echo ${time}
- - echo "started by ${GITLAB_USER_NAME}"
 
-build:
-  extends:
-    - .shared_windows_runners
+
+build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - echo "running scripts in the build job"
+    - ant -version
+    - ant dist
 
-test:
-  extends:
-    - .shared_windows_runners
-  stage: test
+test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    - echo "running scripts in the test job"
+    - echo "Running unit tests..."
+    - ant test-reports
+
+doc-job:   # This job also runs in the test stage.
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  script:
+    - echo "documentation generation..."
+    - ant javadoc
+
+run-job:      # This job runs in the deploy stage.
+  stage: run  # It only runs when both jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application..."
+    - ant run
