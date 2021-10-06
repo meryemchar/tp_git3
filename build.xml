@@ -136,6 +136,7 @@
 		</target>
 
 	<!--#java.exe -cp '../lib/commons-lang3-3.5.jar;Tetris.jar' fr.ubo.tetris.Tetris-->
+	
 	<target name="run" depends="dist">
 		<java classpath="${compile.classpath};${lib.dir}/Tetris.jar"
 				classname="${main-class}"

@@ -1,18 +1,15 @@
+image: openjdk:8
 before_script:
   - apt-get update
   - apt-get -y install ant
-  - git clone https://git-wip-us.apache.org/repos/asf/ant-ivy.git
-  - cd ant-ivy
-  - ant jar
-  - cp ./build/artifact/jars/ivy.jar /usr/share/ant/lib/
-  - cd ../
+  - apt-get -y install ivy
+  - cp /usr/share/java/ivy.jar /usr/share/ant/lib/
 
 stages:        # List of stages for jobs, and their order of execution
   - build
   - test
-  - javadoc
   - run
-
+  - javadoc
 
 build-job:       # This job runs in the build stage, which runs first.
   stage: build
@@ -26,14 +23,16 @@ test-job:   # This job runs in the test stage.
     - echo "Running unit tests..."
     - ant test-reports
 
+run-job:      # This job runs in the deploy stage.
+  stage: run  # It only runs when both jobs in the test stage complete successfully.
+  script:
+    - echo "Deploying application..."
+    - ant run
+
 doc-job:   # This job also runs in the test stage.
   stage: javadoc    # It can run at the same time as unit-test-job (in parallel).
   script:
     - echo "documentation generation..."
     - ant javadoc
 
-run-job:      # This job runs in the deploy stage.
-  stage: run  # It only runs when both jobs in the test stage complete successfully.
-  script:
-    - echo "Deploying application..."
-    - ant run
+
