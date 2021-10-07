@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: [self-hosted, windows, x64, gpu]
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v2
@@ -24,3 +24,5 @@ jobs:
     - name: Build with Ant
       run: ant all
       #ant -noinput -buildfile build.xml
+
+      #C:\Users\Administrateur\.ant\lib
