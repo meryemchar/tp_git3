@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v2
@@ -23,5 +23,12 @@ jobs:
         distribution: 'adopt'
     - name: Build with Ant
       run: ant all
+#<<<<<<< HEAD
       #-noinput -buildfile build.xml
       #all
+      #ant -noinput -buildfile build.xml
+
+      #C:\Users\Administrateur\.ant\lib
+#=======
+      
+#>>>>>>> 8298d963bfce5ffa61fd0cff9f6bd9af12cfa1e7
